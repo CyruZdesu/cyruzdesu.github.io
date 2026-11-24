@@ -3,122 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CyruZdesu | Homepage</title>
+  <title>Zijian | Learning Space</title>
 
-  <!-- 1. KaTeX 核心 CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-
-  <!-- 2. Prism.js 核心主题 CSS (这里使用简洁现代的 Tomorrow Night 主题) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
-  
-  <!-- 3. Prism.js 工具栏与复制代码插件 CSS -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+  <!-- Docsify 基础主题 + KaTeX 样式 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 
   <style>
+    :root {
+      --theme-color: #111827; /* 克制的深墨黑色作为主题强调色 */
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      line-height: 1.7;
-      color: #24292f;
+      color: #1f2937;
+      background-color: #ffffff;
+    }
+
+    /* 侧边栏极简风格优化 */
+    .sidebar {
+      border-right: 1px solid #e5e7eb;
+      background-color: #fafafa;
+    }
+    .sidebar .app-name-link {
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+    .sidebar ul li a {
+      color: #4b5563;
+      font-size: 14px;
+    }
+    .sidebar ul li.active > a {
+      color: #111827;
+      font-weight: 600;
+      border-right: 2px solid #111827;
+    }
+
+    /* 正文排版与阅读宽度 */
+    .markdown-section {
       max-width: 800px;
-      margin: 40px auto;
-      padding: 0 20px;
-      background-color: #f6f8fa;
+      padding: 36px 28px 80px;
+      line-height: 1.8;
     }
-    .container {
-      background: #ffffff;
-      padding: 36px;
-      border-radius: 10px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-      border: 1px solid #d0d7de;
+    .markdown-section h1,
+    .markdown-section h2,
+    .markdown-section h3 {
+      color: #111827;
+      font-weight: 600;
     }
-    h1, h2 {
-      border-bottom: 1px solid #d8dee4;
-      padding-bottom: 8px;
+    .markdown-section h2 {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 6px;
+      margin-top: 2.2em;
     }
-    /* 调整 Prism 代码块圆角与间距 */
-    pre[class*="language-"] {
-      border-radius: 8px;
-      margin: 16px 0;
+    .markdown-section a {
+      color: #111827;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-color: #9ca3af;
     }
-    /* 优化复制代码按钮样式 */
-    div.code-toolbar > .toolbar a,
-    div.code-toolbar > .toolbar button {
-      background: #343a40 !important;
-      color: #f8f9fa !important;
-      border-radius: 4px !important;
-      padding: 4px 8px !important;
-      font-size: 12px !important;
-      border: 1px solid #495057 !important;
-      cursor: pointer;
-      transition: background 0.2s;
+    .markdown-section a:hover {
+      text-decoration-color: #111827;
     }
-    div.code-toolbar > .toolbar button:hover {
-      background: #495057 !important;
+
+    /* 代码块与行内代码优化 */
+    .markdown-section pre {
+      border-radius: 6px;
+      background-color: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .markdown-section pre > code {
+      background-color: transparent;
+      font-size: 0.9rem;
+    }
+    .markdown-section code {
+      background-color: #f3f4f6;
+      color: #111827;
+      border-radius: 4px;
+    }
+
+    /* 独立数学公式溢出时允许横向滚动，适配手机端 */
+    .katex-display {
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding: 6px 0;
     }
   </style>
 </head>
 <body>
+  <div id="app">加载中...</div>
 
-  <div class="container">
-    <h1>个人技术与学习展示</h1>
-    <p>欢迎访问！本页面集成了 KaTeX 实时公式排版以及 Prism.js 代码着色与一键复制。</p>
+  <!-- 1. 先加载 KaTeX，确保解析 Markdown 时可直接调用 -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 
-    <!-- 演示：KaTeX 数学公式渲染 -->
-    <h2>1. 数学公式展示 (KaTeX)</h2>
-    <p>
-      行内公式示例：泊松分布的概率质量函数记为 $P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}$，其中 $\lambda$ 表示单位时间内的平均到达率。
-    </p>
-    <p>
-      块级居中公式示例（线性支持向量机最大间隔超平面优化目标）：
-    </p>
-    $$
-    \min_{\mathbf{w}, b} \frac{1}{2} \|\mathbf{w}\|^2 \quad \text{s.t.} \quad y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1, \quad \forall i=1,\dots,n
-    $$
-
-    <!-- 演示：Prism 代码高亮与复制代码块 -->
-    <h2>2. 代码块与复制功能 (Prism.js)</h2>
-    <p>将鼠标悬浮在代码块右上角，即可看到 <strong>Copy</strong> 按钮：</p>
-
-    <pre><code class="language-python">import math
-
-def poisson_pmf(k: int, lambd: float) -> float:
-    """计算泊松分布单点概率 P(X = k)"""
-    if k < 0 or lambd <= 0:
-        raise ValueError("k 必须是非负整数，lambda 必须大于 0")
-    return (lambd ** k * math.exp(-lambd)) / math.factorial(k)
-
-# 测试计算: 平均每分钟到达 4 人，实际到达 2 人的概率
-print(f"P(X = 2) = {poisson_pmf(2, 4.0):.4f}")
-</code></pre>
-  </div>
-
-  <!-- ================= 脚本引用区域 ================= -->
-
-  <!-- 1. KaTeX 核心 JS 及自动扫描插件 -->
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" 
-          onload="initKaTeX();"></script>
-
-  <!-- 2. Prism.js 核心与语言包 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <!-- 额外引入 Python 语言解析器（Prism 默认仅内置 HTML/CSS/JS/C-like） -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-
-  <!-- 3. Prism 工具栏与复制插件 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
-
-  <!-- 4. 初始化 KaTeX 分隔符配置 -->
+  <!-- 2. Docsify 核心配置 -->
   <script>
-    function initKaTeX() {
-      renderMathInElement(document.body, {
-        delimiters: [
-          { left: '$$', right: '$$', display: true },  // 独立行居中公式
-          { left: '$', right: '$', display: false }    // 行内紧凑公式
-        ],
-        throwOnError: false
-      });
-    }
+    window.$docsify = {
+      name: 'Zijian.Notes',
+      repo: 'https://github.com/CyruZdesu/cyruzdesu.github.io',
+      loadSidebar: true,          // 启用左侧 _sidebar.md
+      subMaxLevel: 3,             // 自动在侧边栏生成当前文章的 2~3 级标题大纲
+      auto2top: true,             // 切换文章后自动回到顶部
+      search: {
+        paths: 'auto',
+        placeholder: '搜索笔记、公式或代码...',
+        noData: '未找到匹配内容',
+        depth: 4
+      },
+      copyCode: {
+        buttonText: '复制代码',
+        errorText: '复制失败',
+        successText: '已复制'
+      },
+      // 自定义防冲突 KaTeX 插件：跳过代码块，先编译公式再交给 Markdown 渲染
+      plugins: [
+        function (hook) {
+          let mathBlocks = [];
+          hook.beforeEach(function (content) {
+            mathBlocks = [];
+            if (typeof katex === 'undefined') return content;
+            return content.replace(
+              /(```[\s\S]*?```|`[^`\n]+`|\\\$)\vert{}\$\$([\s\S]+?)\$\$\vert{}\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g,
+              function (match, ignored, displayMath, inlineMath) {
+                if (ignored) return match;
+                const tex = (displayMath || inlineMath).trim();
+                const isDisplay = Boolean(displayMath);
+                try {
+                  const html = katex.renderToString(tex, {
+                    displayMode: isDisplay,
+                    throwOnError: false
+                  });
+                  const idx = mathBlocks.push(html) - 1;
+                  return `KATEXPLACEHOLDER${idx}END`;
+                } catch (e) {
+                  return match;
+                }
+              }
+            );
+          });
+          hook.afterEach(function (html) {
+            return html.replace(/KATEXPLACEHOLDER(\d+)END/g, function (_, idx) {
+              return mathBlocks[Number(idx)] || '';
+            });
+          });
+        }
+      ]
+    };
   </script>
+
+  <!-- 3. Docsify 核心与插件 -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
+
+  <!-- 4. Prism 编程语言高亮扩展（按需增减） -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-cpp.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
 </body>
 </html>
