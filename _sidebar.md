@@ -7,4 +7,4 @@
   * [线性代数与 SVM 推导](math/linear-algebra.md)
 
 * **杂谈**
-  * [搭建学习空间随记](thoughts/first-note.md)
+  * [搭建学习空间随记](thoughts/)
