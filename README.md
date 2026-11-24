@@ -19,8 +19,7 @@ Glad to meet you here.  ～(∠・ω< )⌒★
 
 ### Recent Updates
 
-* `2026-11-24` Organized sections into browsable directory pages
-* `2026-11-23` Added [Linear Algebra & SVM Derivation](/math/linear-algebra.md)
-* `2026-11-23` Initial site launch
+* `2026-11-24` v1.0.0
+
 
 [View full changelog →](/changelog.md)
