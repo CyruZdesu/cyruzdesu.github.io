@@ -4,7 +4,7 @@ Directory of programming notes, algorithms, and source files.
 
 | File / Topic | Type | Description | Updated |
 | :--- | :--- | :--- | :--- |
-| *Coming soon* | — | Notes and code implementations will be added here | — |
+| [Note for File OI](/code/Note_FileIO.md) | Note | Python Note | 2026-11-24 |
 
 ---
 
