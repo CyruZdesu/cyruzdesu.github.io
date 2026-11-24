@@ -19,9 +19,8 @@ Glad to meet you here.  ～(∠・ω< )⌒★
 
 ### Recent Updates
 
-* `2026-11-24` v1.0.2 — Bug fixes of back link missing in some pages
-* `2026-11-24` v1.0.1 — Bug fixes for KaTeX rendering, sidebar navigation, and broken links
-* `2026-11-24` v1.0.0
+
+* `2026-11-24` v1.1.0 — Add the note of [file IO in python](code/Note_FileIO.md)
 
 
 [View full changelog →](/changelog.md)
