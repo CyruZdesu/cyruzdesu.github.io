@@ -1,4 +1,5 @@
 * [首页 · 个人简介](/)
+* [更新日志](changelog.md)
 
 * **代码学习**
   * [Python 快速排序](code/quick-sort.md)
