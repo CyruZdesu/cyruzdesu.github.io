@@ -3,6 +3,8 @@
 A reverse-chronological log of site updates, new notes, and revisions.
 
 ---
+### 2026-11-24 v1.1.0 
+* **add**: the note of [file IO in python](code/Note_FileIO.md)
 
 ### 2026-11-24 v1.0.2
 * **fix**: add some back links in some pages
