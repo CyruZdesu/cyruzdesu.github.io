@@ -1,7 +1,7 @@
-# Hello, World
+# CZ の　coding journey
 
-Hi there. This is Cyrus a Yr1 CS student.
-This is a page recording my code learning and some thoughts.
+This is Cyrus a Yr1 CS student.
+Here is a page recording my code learning and some thoughts.
 Glad to meet you here.  ～(∠・ω< )⌒★
 
 ---
