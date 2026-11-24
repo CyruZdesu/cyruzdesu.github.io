@@ -3,10 +3,122 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>我的个人主页</title>
+  <title>CyruZdesu | Homepage</title>
+
+  <!-- 1. KaTeX 核心 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+
+  <!-- 2. Prism.js 核心主题 CSS (这里使用简洁现代的 Tomorrow Night 主题) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+  
+  <!-- 3. Prism.js 工具栏与复制代码插件 CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.css">
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      line-height: 1.7;
+      color: #24292f;
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+      background-color: #f6f8fa;
+    }
+    .container {
+      background: #ffffff;
+      padding: 36px;
+      border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      border: 1px solid #d0d7de;
+    }
+    h1, h2 {
+      border-bottom: 1px solid #d8dee4;
+      padding-bottom: 8px;
+    }
+    /* 调整 Prism 代码块圆角与间距 */
+    pre[class*="language-"] {
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+    /* 优化复制代码按钮样式 */
+    div.code-toolbar > .toolbar a,
+    div.code-toolbar > .toolbar button {
+      background: #343a40 !important;
+      color: #f8f9fa !important;
+      border-radius: 4px !important;
+      padding: 4px 8px !important;
+      font-size: 12px !important;
+      border: 1px solid #495057 !important;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    div.code-toolbar > .toolbar button:hover {
+      background: #495057 !important;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, World!</h1>
-  <p>这是我挂载在 GitHub Pages 上的个人主页。</p>
+
+  <div class="container">
+    <h1>个人技术与学习展示</h1>
+    <p>欢迎访问！本页面集成了 KaTeX 实时公式排版以及 Prism.js 代码着色与一键复制。</p>
+
+    <!-- 演示：KaTeX 数学公式渲染 -->
+    <h2>1. 数学公式展示 (KaTeX)</h2>
+    <p>
+      行内公式示例：泊松分布的概率质量函数记为 $P(X = k) = \frac{\lambda^k e^{-\lambda}}{k!}$，其中 $\lambda$ 表示单位时间内的平均到达率。
+    </p>
+    <p>
+      块级居中公式示例（线性支持向量机最大间隔超平面优化目标）：
+    </p>
+    $$
+    \min_{\mathbf{w}, b} \frac{1}{2} \|\mathbf{w}\|^2 \quad \text{s.t.} \quad y_i (\mathbf{w}^T \mathbf{x}_i + b) \ge 1, \quad \forall i=1,\dots,n
+    $$
+
+    <!-- 演示：Prism 代码高亮与复制代码块 -->
+    <h2>2. 代码块与复制功能 (Prism.js)</h2>
+    <p>将鼠标悬浮在代码块右上角，即可看到 <strong>Copy</strong> 按钮：</p>
+
+    <pre><code class="language-python">import math
+
+def poisson_pmf(k: int, lambd: float) -> float:
+    """计算泊松分布单点概率 P(X = k)"""
+    if k < 0 or lambd <= 0:
+        raise ValueError("k 必须是非负整数，lambda 必须大于 0")
+    return (lambd ** k * math.exp(-lambd)) / math.factorial(k)
+
+# 测试计算: 平均每分钟到达 4 人，实际到达 2 人的概率
+print(f"P(X = 2) = {poisson_pmf(2, 4.0):.4f}")
+</code></pre>
+  </div>
+
+  <!-- ================= 脚本引用区域 ================= -->
+
+  <!-- 1. KaTeX 核心 JS 及自动扫描插件 -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" 
+          onload="initKaTeX();"></script>
+
+  <!-- 2. Prism.js 核心与语言包 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <!-- 额外引入 Python 语言解析器（Prism 默认仅内置 HTML/CSS/JS/C-like） -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+  <!-- 3. Prism 工具栏与复制插件 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/toolbar/prism-toolbar.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+
+  <!-- 4. 初始化 KaTeX 分隔符配置 -->
+  <script>
+    function initKaTeX() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          { left: '$$', right: '$$', display: true },  // 独立行居中公式
+          { left: '$', right: '$', display: false }    // 行内紧凑公式
+        ],
+        throwOnError: false
+      });
+    }
+  </script>
 </body>
 </html>
