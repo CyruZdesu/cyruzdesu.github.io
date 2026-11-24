@@ -103,6 +103,9 @@
       name: 'Zijian.Notes',
       repo: 'https://github.com/CyruZdesu/cyruzdesu.github.io',
       loadSidebar: true,          // 启用左侧 _sidebar.md
+      alias: {
+        '/.*/_sidebar.md': '/_sidebar.md'
+      },
       subMaxLevel: 3,             // 自动在侧边栏生成当前文章的 2~3 级标题大纲
       auto2top: true,             // 切换文章后自动回到顶部
       search: {
@@ -124,7 +127,7 @@
             mathBlocks = [];
             if (typeof katex === 'undefined') return content;
             return content.replace(
-              /(```[\s\S]*?```|`[^`\n]+`|\\\$)\vert{}\$\$([\s\S]+?)\$\$\vert{}\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g,
+              /(```[\s\S]*?```|`[^`\n]+`|\\\$)|\$\$([\s\S]+?)\$\$|\$([^\s$](?:[^$\n]*?[^\s$])?)\$/g,
               function (match, ignored, displayMath, inlineMath) {
                 if (ignored) return match;
                 const tex = (displayMath || inlineMath).trim();

@@ -4,7 +4,7 @@ Directory of programming notes, algorithms, and source files.
 
 | File / Topic | Type | Description | Updated |
 | :--- | :--- | :--- | :--- |
-| [Quick Sort in Python](/code/quick-sort.md) | Note | Divide-and-conquer implementation & time complexity | 2026-11-23 |
+| *Coming soon* | — | Notes and code implementations will be added here | — |
 
 ---
 
