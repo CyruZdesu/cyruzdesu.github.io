@@ -4,6 +4,9 @@ A reverse-chronological log of site updates, new notes, and revisions.
 
 ---
 
+### 2026-11-24 v1.0.2
+* **fix**: add some back links in some pages
+
 ### 2026-11-24 v1.0.1
 * **fix**: Fixed the KaTeX plugin regex in `index.html` (`\vert{}` -> `|`) so inline (`$...$`) and block (`$$...$$`) math formulas render properly.
 * **fix**: Removed broken 404 placeholder links (`code/quick-sort.md`, `math/linear-algebra.md`) from `_sidebar.md`, `code/README.md`, and `math/README.md`.
