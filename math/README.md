@@ -4,7 +4,7 @@ Directory of coursework notes, proofs, and mathematical derivations.
 
 | File / Topic | Type | Description | Updated |
 | :--- | :--- | :--- | :--- |
-| *Coming soon* | — | Coursework notes and derivations will be added here | — |
+| [computational_complexity](math/Computational_complexity.md)| Note | some basic knowlegde of computational complexity [TBC] | 26-11-25 |
 
 ---
 

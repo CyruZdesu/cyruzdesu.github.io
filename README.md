@@ -20,7 +20,9 @@ Glad to meet you here.  ～(∠・ω< )⌒★
 ### Recent Updates
 
 
-* `2026-11-24` v1.1.0 — Add the note of [file IO in python](code/Note_FileIO.md)
+### 2026-11-25 v1.2.0 
+* **add**: the note of [computational_complexity](math/Computational_complexity.md)
+* **add**: the note of [math notation in markdown](thoughts/math%20notation%20in%20md.md)
 
 
 [View full changelog →](/changelog.md)
