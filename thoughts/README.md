@@ -2,10 +2,9 @@
 
 Directory of study workflows and informal reflections.
 
-| Title | Date | Summary |
-| :--- | :--- | :--- |
-| [Building a Learning Space](/thoughts/first_note.md) | 2026-11-24 | Notes on setting up this Docsify workspace |
-| [math notation in markdown](thoughts/math%20notation%20in%20md.md)| 2026-11-25 | Guidance on tpying mathematical expression in markdown file |
----
-
-[← Back to Home](/)
+<!-- AUTO_LIST_START -->
+| Title | Updated |
+| :--- | :--- |
+| [math notation in md](/thoughts/math_notation_in_md.md) | 2026-11-28 |
+| [Chapter 0](/thoughts/first_note.md) | 2026-11-24 |
+<!-- AUTO_LIST_END -->

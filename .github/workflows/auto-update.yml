@@ -1,0 +1,45 @@
+name: Auto Update Site Index & Changelog
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'code/**'
+      - 'math/**'
+      - 'thoughts/**'
+      - 'changelog.md'
+      - 'scripts/update_site.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update-index:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Update sidebar, category indexes, and homepage
+        run: python scripts/update_site.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add _sidebar.md README.md changelog.md code/README.md math/README.md thoughts/README.md
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: auto-update sidebar, directory indexes, and recent updates"
+            git push
+          fi

@@ -1,86 +1,362 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zijian | Learning Space</title>
 
+  <!-- 现代极简字体：Inter（正文）+ JetBrains Mono（代码），带无阻塞系统字体回退 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
   <!-- Docsify 基础主题 + KaTeX 样式 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
 
+  <script>
+    // 首屏渲染前初始化主题，避免深色模式下闪白
+    (function () {
+      const saved = localStorage.getItem('site-theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (saved === 'dark' || (!saved && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+
   <style>
     :root {
-      --theme-color: #111827; /* 克制的深墨黑色作为主题强调色 */
+      --theme-color: #111827;
+      --bg: #ffffff;
+      --bg-sidebar: #fafafa;
+      --bg-subtle: #f3f4f6;
+      --bg-hover: #f3f4f6;
+      --bg-code: #f8fafc;
+      --text: #1f2937;
+      --text-strong: #111827;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --border-subtle: #f0f1f3;
+      --link-underline: #9ca3af;
+      --shadow-sm: 0 2px 8px rgba(17, 24, 39, 0.06);
+      --shadow-md: 0 6px 20px rgba(17, 24, 39, 0.09);
+    }
+
+    [data-theme="dark"] {
+      --theme-color: #f3f4f6;
+      --bg: #0f1115;
+      --bg-sidebar: #14171d;
+      --bg-subtle: #1e232c;
+      --bg-hover: #1e232c;
+      --bg-code: #161a22;
+      --text: #d1d5db;
+      --text-strong: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border: #262b36;
+      --border-subtle: #1d222b;
+      --link-underline: #4b5563;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.45);
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      color: #1f2937;
-      background-color: #ffffff;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text);
+      background-color: var(--bg);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
-    /* 侧边栏极简风格优化 */
+    /* 顶部极细阅读进度条 */
+    #reading-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background-color: var(--text-strong);
+      z-index: 999;
+      pointer-events: none;
+      transition: width 0.08s linear, opacity 0.2s ease;
+      opacity: 0;
+    }
+
+    /* 侧边栏极简风格与可折叠目录 */
     .sidebar {
-      border-right: 1px solid #e5e7eb;
-      background-color: #fafafa;
+      border-right: 1px solid var(--border);
+      background-color: var(--bg-sidebar);
+      transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.25s ease-out;
+    }
+    .sidebar-toggle {
+      background-color: transparent;
+    }
+    .sidebar-toggle span {
+      background-color: var(--text-strong);
     }
     .sidebar .app-name-link {
       font-weight: 700;
-      letter-spacing: -0.02em;
-      color: #111827;
-    }
-    .sidebar ul li a {
-      color: #4b5563;
-      font-size: 14px;
-    }
-    .sidebar ul li.active > a {
-      color: #111827;
-      font-weight: 600;
-      border-right: 2px solid #111827;
+      letter-spacing: -0.025em;
+      color: var(--text-strong);
     }
 
-    /* 正文排版与阅读宽度 */
+    /* 搜索框极简美化 */
+    .search {
+      border-bottom: 1px solid var(--border) !important;
+      padding: 8px 12px !important;
+    }
+    .search .input-wrap {
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+    .search .input-wrap:focus-within {
+      border-color: var(--text-muted);
+      box-shadow: 0 0 0 3px rgba(107, 114, 128, 0.12);
+    }
+    .search input {
+      background: transparent !important;
+      color: var(--text) !important;
+      font-size: 13.5px !important;
+      font-family: inherit;
+    }
+    .search .matching-post {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .search .matching-post h2 {
+      color: var(--text-strong);
+    }
+    .search .matching-post p {
+      color: var(--text-muted);
+    }
+
+    .sidebar ul li {
+      margin: 2px 0;
+    }
+    .sidebar ul li a {
+      color: var(--text-muted);
+      font-size: 14px;
+      border-radius: 6px;
+      padding: 4px 10px;
+      margin-right: 10px;
+      transition: color 0.16s ease, background-color 0.16s ease;
+    }
+    .sidebar ul li a:hover {
+      color: var(--text-strong);
+      background-color: var(--bg-hover);
+      text-decoration: none;
+    }
+    .sidebar ul li.active > a {
+      color: var(--text-strong);
+      font-weight: 600;
+      background-color: var(--bg-hover);
+      border-right: none;
+    }
+
+    /* 可折叠目录样式 */
+    .sidebar-nav li.folder-item {
+      position: relative;
+    }
+    .sidebar-nav li.folder-item > a,
+    .sidebar-nav li.folder-item > p > a {
+      padding-right: 30px;
+    }
+    .sidebar-nav li.folder-item > p {
+      margin: 0;
+    }
+    .folder-toggle {
+      position: absolute;
+      right: 12px;
+      top: 3px;
+      width: 24px;
+      height: 24px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: 5px;
+      cursor: pointer;
+      padding: 0;
+      transition: background-color 0.16s ease, color 0.16s ease;
+    }
+    .folder-toggle:hover {
+      background-color: var(--bg-hover);
+      color: var(--text-strong);
+    }
+    .folder-toggle svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .sidebar-nav li.folder-item.is-open > .folder-toggle svg {
+      transform: rotate(90deg);
+    }
+    .sidebar-nav li.folder-item > ul.folder-children {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+      transition: max-height 0.24s ease, opacity 0.18s ease;
+    }
+    .sidebar-nav li.folder-item.is-open > ul.folder-children {
+      max-height: 1200px;
+      opacity: 1;
+      margin-top: 2px;
+    }
+
+    /* 正文排版与切页淡入 */
+    @keyframes fadeInContent {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
     .markdown-section {
-      max-width: 800px;
-      padding: 36px 28px 80px;
-      line-height: 1.8;
+      max-width: 780px;
+      padding: 40px 32px 96px;
+      line-height: 1.82;
+      font-size: 15.5px;
+      color: var(--text);
+    }
+    .markdown-section.page-fade {
+      animation: fadeInContent 0.2s ease-out;
     }
     .markdown-section h1,
     .markdown-section h2,
-    .markdown-section h3 {
-      color: #111827;
+    .markdown-section h3,
+    .markdown-section h4 {
+      color: var(--text-strong);
       font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+    .markdown-section h1 {
+      font-size: 1.9rem;
+      margin-bottom: 1.1rem;
     }
     .markdown-section h2 {
-      border-bottom: 1px solid #e5e7eb;
-      padding-bottom: 6px;
-      margin-top: 2.2em;
+      font-size: 1.38rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+      margin-top: 2.3em;
+    }
+    .markdown-section h3 {
+      font-size: 1.12rem;
+      margin-top: 1.8em;
+    }
+    .markdown-section strong {
+      color: var(--text-strong);
+      font-weight: 600;
+    }
+    .markdown-section hr {
+      border-bottom: 1px solid var(--border);
+      margin: 2em 0;
     }
     .markdown-section a {
-      color: #111827;
+      color: var(--text-strong);
       text-decoration: underline;
       text-underline-offset: 3px;
-      text-decoration-color: #9ca3af;
+      text-decoration-color: var(--link-underline);
+      transition: text-decoration-color 0.16s ease, opacity 0.16s ease;
     }
     .markdown-section a:hover {
-      text-decoration-color: #111827;
+      text-decoration-color: var(--text-strong);
     }
 
-    /* 代码块与行内代码优化 */
+    /* 轻量化表格 */
+    .markdown-section table {
+      display: table;
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.4em 0;
+      font-size: 14.5px;
+    }
+    .markdown-section thead tr {
+      background-color: var(--bg-subtle);
+      border-top: none;
+    }
+    .markdown-section tr {
+      background-color: transparent !important;
+      border-top: 1px solid var(--border);
+      transition: background-color 0.14s ease;
+    }
+    .markdown-section tbody tr:hover {
+      background-color: var(--bg-hover) !important;
+    }
+    .markdown-section th,
+    .markdown-section td {
+      border: none;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .markdown-section th {
+      color: var(--text-strong);
+      font-weight: 600;
+    }
+
+    /* 引用块 */
+    .markdown-section blockquote {
+      border-left: 3px solid var(--text-strong);
+      background-color: var(--bg-subtle);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 0 6px 6px 0;
+      margin: 1.5em 0;
+    }
+    .markdown-section blockquote p {
+      margin: 0.3em 0;
+      font-weight: 400;
+    }
+
+    /* 代码块与行内代码 */
+    .markdown-section pre,
+    .markdown-section code {
+      font-family: "JetBrains Mono", "SF Mono", Menlo, Monaco, Consolas, monospace;
+    }
     .markdown-section pre {
-      border-radius: 6px;
-      background-color: #f8fafc;
-      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      background-color: var(--bg-code) !important;
+      border: 1px solid var(--border);
+      padding: 0 1.2em;
     }
     .markdown-section pre > code {
-      background-color: transparent;
-      font-size: 0.9rem;
+      background-color: transparent !important;
+      color: var(--text);
+      font-size: 0.875rem;
+      line-height: 1.65;
     }
     .markdown-section code {
-      background-color: #f3f4f6;
-      color: #111827;
+      background-color: var(--bg-subtle);
+      color: var(--text-strong);
       border-radius: 4px;
+      font-size: 0.88em;
+      padding: 2px 6px;
+    }
+    .docsify-copy-code-button {
+      border-radius: 0 7px 0 6px !important;
+      font-size: 12px !important;
+      transition: opacity 0.2s ease, background-color 0.16s ease !important;
+    }
+
+    /* 深色模式下的 GitHub 角标微调 */
+    [data-theme="dark"] .github-corner svg {
+      fill: #f3f4f6 !important;
+      color: #0f1115 !important;
     }
 
     /* 独立数学公式溢出时允许横向滚动，适配手机端 */
@@ -89,16 +365,202 @@
       overflow-y: hidden;
       padding: 6px 0;
     }
+
+    /* 首页 2x2 板块导航宫格卡片 */
+    .dir-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 1.2em 0 1.8em;
+    }
+    .markdown-section a.dir-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px 22px;
+      border-radius: 12px;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border);
+      text-decoration: none;
+      color: var(--text);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+    .markdown-section a.dir-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--text-muted);
+      box-shadow: var(--shadow-sm);
+      text-decoration: none;
+    }
+    .dir-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .dir-card-title {
+      font-size: 1.18rem;
+      font-weight: 650;
+      color: var(--text-strong);
+      letter-spacing: -0.02em;
+    }
+    .dir-card-arrow {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      transition: transform 0.18s ease, color 0.18s ease;
+    }
+    .markdown-section a.dir-card:hover .dir-card-arrow {
+      transform: translateX(4px);
+      color: var(--text-strong);
+    }
+    .markdown-section p.dir-card-desc {
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+    @media (max-width: 600px) {
+      .dir-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* 右下角极简悬浮工具栏（回到顶部 + 浅色/深色模式） */
+    .floating-tools {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 900;
+    }
+    .float-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background-color: var(--bg);
+      color: var(--text-strong);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease, opacity 0.2s ease, visibility 0.2s ease;
+    }
+    .float-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      background-color: var(--bg-subtle);
+    }
+    .float-btn svg {
+      width: 17px;
+      height: 17px;
+    }
+    #back-to-top {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    @media (max-width: 768px) {
+      .markdown-section {
+        padding: 28px 20px 80px;
+      }
+      .floating-tools {
+        right: 16px;
+        bottom: 16px;
+      }
+    }
   </style>
 </head>
 <body>
-  <div id="app">加载中...</div>
+  <div id="reading-progress" aria-hidden="true"></div>
+  <div id="app">Loading...</div>
+
+  <!-- Floating buttons: back to top + light/dark mode -->
+  <div class="floating-tools">
+    <button id="back-to-top" class="float-btn" type="button" title="Back to top" aria-label="Back to top">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 15l-6-6-6 6"/>
+      </svg>
+    </button>
+    <button id="theme-toggle" class="float-btn" type="button" title="Toggle light/dark mode" aria-label="Toggle light or dark mode">
+      <svg id="theme-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></svg>
+    </button>
+  </div>
 
   <!-- 1. 先加载 KaTeX，确保解析 Markdown 时可直接调用 -->
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
 
   <!-- 2. Docsify 核心配置 -->
   <script>
+    const folderOpenState = new Map();
+
+    function setupCollapsibleSidebar() {
+      const topItems = document.querySelectorAll('.sidebar-nav > ul > li');
+      topItems.forEach(function (li) {
+        const directLink = li.querySelector(':scope > a, :scope > p > a');
+        const childList = li.querySelector(':scope > ul:not(.app-sub-sidebar)');
+        if (!directLink || !childList) return;
+
+        const key = directLink.getAttribute('href') || directLink.textContent.trim();
+        li.classList.add('folder-item');
+        childList.classList.add('folder-children');
+
+        let toggleBtn = li.querySelector(':scope > .folder-toggle');
+        if (!toggleBtn) {
+          toggleBtn = document.createElement('button');
+          toggleBtn.type = 'button';
+          toggleBtn.className = 'folder-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle folder');
+          toggleBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>';
+
+          toggleBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isOpen = li.classList.toggle('is-open');
+            toggleBtn.setAttribute('aria-expanded', String(isOpen));
+            folderOpenState.set(key, isOpen);
+          });
+
+          // 点击主目录文字时，顺便展开该目录
+          directLink.addEventListener('click', function () {
+            li.classList.add('is-open');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+            folderOpenState.set(key, true);
+          });
+
+          li.insertBefore(toggleBtn, childList);
+        }
+
+        // 若当前页面位于该目录下，自动保持展开；否则遵循用户的折叠状态（默认折叠）
+        const containsActive = li.classList.contains('active') || Boolean(childList.querySelector('li.active'));
+        const shouldOpen = folderOpenState.has(key) ? folderOpenState.get(key) : containsActive;
+        if (containsActive) {
+          folderOpenState.set(key, true);
+        }
+        const finalOpen = containsActive || shouldOpen;
+        li.classList.toggle('is-open', finalOpen);
+        toggleBtn.setAttribute('aria-expanded', String(finalOpen));
+      });
+    }
+
+    function observeSidebarNav() {
+      const nav = document.querySelector('.sidebar-nav');
+      if (!nav || nav.dataset.observed) return;
+      nav.dataset.observed = 'true';
+      const observer = new MutationObserver(function () {
+        setupCollapsibleSidebar();
+      });
+      observer.observe(nav, { childList: true, subtree: false });
+    }
+
     window.$docsify = {
       name: 'Cyrus.Notes',
       repo: 'https://github.com/CyruZdesu/cyruzdesu.github.io',
@@ -110,17 +572,17 @@
       auto2top: true,             // 切换文章后自动回到顶部
       search: {
         paths: 'auto',
-        placeholder: '搜索笔记、公式或代码...',
-        noData: '未找到匹配内容',
+        placeholder: 'Search notes, formulas, or code...',
+        noData: 'No results found',
         depth: 4
       },
       copyCode: {
-        buttonText: '复制代码',
-        errorText: '复制失败',
-        successText: '已复制'
+        buttonText: 'Copy',
+        errorText: 'Failed',
+        successText: 'Copied'
       },
-      // 自定义防冲突 KaTeX 插件：跳过代码块，先编译公式再交给 Markdown 渲染
       plugins: [
+        // 1. 自定义防冲突 KaTeX 插件：跳过代码块，先编译公式再交给 Markdown 渲染
         function (hook) {
           let mathBlocks = [];
           hook.beforeEach(function (content) {
@@ -150,9 +612,146 @@
               return mathBlocks[Number(idx)] || '';
             });
           });
+        },
+        // 2. 自动页脚返回导航插件：非首页自动添加返回上级目录与首页链接
+        function (hook, vm) {
+          hook.afterEach(function (html) {
+            const path = vm.route.path || '/';
+            if (path === '/' || path === '/README') return html;
+            if (html.includes('auto-back-nav') || html.includes('Back to Home')) return html;
+
+            const sectionMap = {
+              code: 'Code',
+              math: 'Mathematics',
+              thoughts: 'Thoughts'
+            };
+            const parts = path.split('/').filter(Boolean);
+            const links = ['<a href="#/">← Back to Home</a>'];
+            if (parts.length >= 2 && sectionMap[parts[0]]) {
+              links.unshift(`<a href="#/${parts[0]}/">← Back to ${sectionMap[parts[0]]}</a>`);
+            }
+
+            const footer = `<hr><p class="auto-back-nav" style="display:flex;gap:1.5em;flex-wrap:wrap;">${links.join('')}</p>`;
+            return html + footer;
+          });
+        },
+        // 3. 交互增强：侧边栏可折叠目录 + 切页淡入过渡 + 进度条重置 + Giscus 留言板挂载
+        function (hook) {
+          hook.ready(function () {
+            setupCollapsibleSidebar();
+            observeSidebarNav();
+          });
+          hook.doneEach(function () {
+            setupCollapsibleSidebar();
+            observeSidebarNav();
+            mountGiscus();
+
+            const section = document.querySelector('.markdown-section');
+            if (section) {
+              section.classList.remove('page-fade');
+              void section.offsetWidth;
+              section.classList.add('page-fade');
+            }
+
+            const bar = document.getElementById('reading-progress');
+            if (bar) {
+              bar.style.width = '0%';
+              bar.style.opacity = '0';
+            }
+          });
         }
       ]
     };
+
+    function getCurrentGiscusTheme() {
+      return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+    }
+
+    function mountGiscus() {
+      const container = document.getElementById('giscus-container');
+      if (!container) return;
+      container.innerHTML = '';
+      const script = document.createElement('script');
+      script.src = 'https://giscus.app/client.js';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.setAttribute('data-repo', 'CyruZdesu/cyruzdesu.github.io');
+      script.setAttribute('data-repo-id', 'R_kgDOV5f1wg');
+      script.setAttribute('data-category', 'Announcements');
+      script.setAttribute('data-category-id', 'DIC_kwDOV5f1ws4DMJQX');
+      script.setAttribute('data-mapping', 'specific');
+      script.setAttribute('data-term', 'guestbook');
+      script.setAttribute('data-strict', '0');
+      script.setAttribute('data-reactions-enabled', '1');
+      script.setAttribute('data-emit-metadata', '0');
+      script.setAttribute('data-input-position', 'bottom');
+      script.setAttribute('data-theme', getCurrentGiscusTheme());
+      script.setAttribute('data-lang', 'en');
+      container.appendChild(script);
+    }
+
+    function syncGiscusTheme() {
+      const iframe = document.querySelector('iframe.giscus-frame');
+      if (!iframe) return;
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: getCurrentGiscusTheme() } } },
+        'https://giscus.app'
+      );
+    }
+
+    // 页面交互：阅读进度条、回到顶部、浅色/深色模式切换
+    document.addEventListener('DOMContentLoaded', function () {
+      const progressBar = document.getElementById('reading-progress');
+      const backToTopBtn = document.getElementById('back-to-top');
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+
+      const sunIcon = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+      const moonIcon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+
+      function renderThemeIcon() {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        themeIcon.innerHTML = isDark ? sunIcon : moonIcon;
+      }
+      renderThemeIcon();
+
+      themeToggleBtn.addEventListener('click', function () {
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('site-theme', 'light');
+        } else {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('site-theme', 'dark');
+        }
+        renderThemeIcon();
+        syncGiscusTheme();
+      });
+
+      let ticking = false;
+      window.addEventListener('scroll', function () {
+        if (ticking) return;
+        ticking = true;
+        window.requestAnimationFrame(function () {
+          const scrollTop = window.scrollY || document.documentElement.scrollTop;
+          const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          const progress = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
+
+          if (progressBar) {
+            progressBar.style.width = progress + '%';
+            progressBar.style.opacity = scrollTop > 20 ? '1' : '0';
+          }
+          if (backToTopBtn) {
+            backToTopBtn.classList.toggle('visible', scrollTop > 320);
+          }
+          ticking = false;
+        });
+      }, { passive: true });
+
+      backToTopBtn.addEventListener('click', function () {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
   </script>
 
   <!-- 3. Docsify 核心与插件 -->

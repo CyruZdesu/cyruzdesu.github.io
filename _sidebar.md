@@ -1,9 +1,13 @@
-* [首页 · 个人简介](/)
-* [更新日志](/changelog.md)
+* [Home](/)
+* [Changelog](/changelog.md)
+* [Guestbook](/guestbook.md)
 
-* [代码学习](/code/)
+* [Code](/code/)
+  * [Note for File IO](/code/Note_FileIO.md)
 
-* [数学学习](/math/)
+* [Mathematics](/math/)
+  * [Computational Complexity](/math/Computational_complexity.md)
 
-* [杂谈](/thoughts/)
-  * [Chapter 0 · 搭建学习空间随记](/thoughts/first_note.md)
+* [Thoughts](/thoughts/)
+  * [math notation in md](/thoughts/math_notation_in_md.md)
+  * [Chapter 0](/thoughts/first_note.md)

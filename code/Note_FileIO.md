@@ -85,9 +85,3 @@ f.write(f'paper: {kg:.1f} kg\n')
 * With a bare `split()`, `strip()` is optional (bare `split()` ignores leading/trailing whitespace anyway).
 * With `split(',')`, `strip()` matters — otherwise the last field keeps its `\n`, e.g. `'2.5\n'`.
 *  `repr()`'s returned description is a new string in which the one newline character appears as **two printable characters** (backslash + n); the original string is untouched.
-
-
-
----
-
-[← Back to Home](/)
