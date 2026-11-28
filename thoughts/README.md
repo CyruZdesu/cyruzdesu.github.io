@@ -6,5 +6,5 @@ Directory of study workflows and informal reflections.
 | Title | Updated |
 | :--- | :--- |
 | [math notation in md](/thoughts/math_notation_in_md.md) | 2026-11-28 |
-| [Chapter 0](/thoughts/first_note.md) | 2026-11-24 |
+| [Chapter 0](/thoughts/first_note.md) | 2026-11-28 |
 <!-- AUTO_LIST_END -->
